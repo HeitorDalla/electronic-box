@@ -10,7 +10,7 @@ function newElement () {
     return novoElemento;
 };
 
-document.querySelector("#emailUsuari").style.displa = 'none';
+document.querySelector("#emailUsuario").style.display = 'none';
 
 // Funcionalidades botao entrar
 const buttonEntrar = document.querySelector("#buttonEntrar");
@@ -24,4 +24,5 @@ const buttonCadastrar = document.querySelector("#buttonCadastrar");
 buttonCadastrar.addEventListener("click", (event) => {
     newElement();
 });
+
 
