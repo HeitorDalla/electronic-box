@@ -1,6 +1,9 @@
-"use strict";
+"use strict"; // Ativa o modo estrito do Javascript
+
+const inputs = {}; // Objeto que contem todos os inputs (chave: id; valor: valor do campo)
 
 const containerCadastro = document.querySelector("#cadastro");
+const containerInputs = document.querySelector("#inputs");
 
 // Função para criar elementos
 function newElement () {
@@ -10,6 +13,15 @@ function newElement () {
     return novoElemento;
 };
 
+// Funcao para atualizar os inputs dentro do objeto global
+function atualizarInputs () {
+    const elementosInput = document.querySelectorAll(".inputs");
+    elementosInput.forEach((input) => {
+        inputs[input.id] = input.value;
+    })
+};
+
+// Oculta o campo de email inicialmente
 document.querySelector("#emailUsuario").style.display = 'none';
 
 // Funcionalidades botao entrar
@@ -21,8 +33,7 @@ buttonEntrar.addEventListener("click", (event) => {
 
 // Funcionalidades botao cadastrar
 const buttonCadastrar = document.querySelector("#buttonCadastrar");
-buttonCadastrar.addEventListener("click", (event) => {
+buttonCadastrar.addEventListener("click", (event) => { 
     newElement();
 });
-
 
