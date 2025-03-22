@@ -6,21 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caixa Eletrônico</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
 
-    <div id="cadastro">
-        <h1>Caixa Eletrônico</h1>
-        <div id="inputs">
-            <input type="text" name="nomeUsuario" id="nomeUsuario" placeholder="Usuário" class="inputs">
-            <input type="password" name="senhaUsuario" id="senhaUsuario" placeholder="Senha" class="inputs">
-            <input type="email" name="emailUsuario" id="emailUsuario" placeholder="Email" class="inputs">
-            <!-- Campo de email oculto inicialmente -->
+    <form action="#" id="form">
+        <div id="cadastro">
+            <h1>Caixa Eletrônico</h1>
+            <div id="inputs">
+                <div class="boxInput">
+                    <input type="text" name="nomeUsuario" id="nomeUsuario" placeholder="Usuário" class="inputs">
+                </div>
+                <div class="boxInput">
+                    <input type="password" name="senhaUsuario" id="senhaUsuario" placeholder="Senha" class="inputs">
+                </div>
+                <div class="boxInput">
+                    <input type="email" name="emailUsuario" id="emailUsuario" placeholder="Email" class="inputs">
+                    <!-- Campo de email oculto inicialmente -->
+                </div>
+            </div>
+            <button id="buttonEntrar">Entrar</button>
+            <button id="buttonCadastrar">Cadastrar</button>
         </div>
-        <button id="buttonEntrar">Entrar</button>
-        <button id="buttonCadastrar">Cadastrar</button>
-    </div>
+    </form>
 
     <script src="script.js"></script>
 </body>
