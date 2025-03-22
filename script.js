@@ -59,12 +59,57 @@ function validacaoDados (value) {
 
 };
 
+function validarEmail (value) {
+    const validator = {
+        eValid: true,
+        mensagemErro: null
+    }
+
+    if (isEmpty(value)) {
+        validator.eValid = false;
+        validator.mensagemErro = 'O campo esta vazio!';
+        return validator;
+    }
+
+    const expressaoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!expressaoRegex.test(value)) {
+        validator.eValid = false;
+        validator.mensagemErro = 'O email é obrigatório!';
+        return validator;
+    }
+
+    return validator;
+}
+
+// Funcao para limpar campos
+function limparCampos () {
+
+    // Limpar campos de erro
+    const erroSpanName = newElement(inputNomeUsuario.closest('.boxInput'));
+    erroSpanName.innerHTML = '';
+    const erroSpanSenha = newElement(inputSenhaUsuario.closest('.boxInput'));
+    erroSpanSenha.innerHTML = '';
+
+    // Limpar os campos de input
+    inputNomeUsuario.innerHTML = '';
+    inputSenhaUsuario.innerHTML = '';
+    inputEmailUsuario.innerHTML = '';
+
+    inputNomeUsuario.value = '';
+    inputSenhaUsuario.value = '';
+    inputEmailUsuario.value = '';
+
+}
+
 // Para fazer as validacoes de inputs
 form.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    let formIsValid = true;
+    let isValid = true;
     const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>';
+
+    inputEmailUsuario.style.display = 'none';
 
     // Nome
     const nomeValue = inputNomeUsuario.value;
@@ -74,7 +119,7 @@ form.addEventListener("submit", (event) => {
     const validacaoNome = validacaoDados(nomeValue);
 
     if (!validacaoNome.eValid) {
-        formIsValid = false;
+        isValid = false;
         erroSpanName.innerHTML = `${iconeErro} ${validacaoNome.mensagemErro}`;
     } else {
         erroSpanName.innerHTML = '';
@@ -88,14 +133,70 @@ form.addEventListener("submit", (event) => {
     const validacaoSenha = validacaoDados(senhaValue);
 
     if (!validacaoSenha.eValid) {
-        formIsValid = false;
+        isValid = false;
         erroSpanSenha.innerHTML = `${iconeErro} ${validacaoSenha.mensagemErro}`;
     } else {
         erroSpanSenha.innerHTML = '';
     }
 
-    if (formIsValid) {
-        form.submit();
+    if (isValid) {
+        alert("Login bem-sucedido!");
     }
 
 });
+
+const buttonEntrar = document.querySelector("#buttonEntrar");
+const buttonCadastrar = document.querySelector("#buttonCadastrar");
+const buttonVoltar = document.querySelector("#buttonVoltar");
+
+// Funcionalidades do botao cadastrar
+buttonCadastrar.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    let isValid = true;
+    const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>';
+
+    limparCampos();
+
+    // Criar o elemento input email
+    inputEmailUsuario.style.display = 'inline';
+
+    // Oculta o campo do button entrar
+    buttonEntrar.style.display = 'none';
+
+    // Validação do botao email
+    const emailValue = inputEmailUsuario.value;
+    const containerPaiEmail = inputEmailUsuario.closest(".boxInput");
+    let erroSpanEmail = newElement(containerPaiEmail);
+
+    const validacaoEmail = validarEmail(emailValue);
+
+    if (!validacaoEmail.eValid) {
+        let isValid = false;
+        erroSpanEmail.innerHTML = `${iconeErro} ${validacaoEmail.mensagemErro}`
+    } else {
+        erroSpanSenha.innerHTML = '';
+    }
+
+    if (isValid) {
+        limparCampos();
+    }
+
+});
+
+// Funcionalidades do botao 'voltar ao entrar'
+buttonVoltar.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    // Limpar erros
+    limparCampos();
+
+    inputEmailUsuario.style.display = 'none';
+
+    buttonEntrar.style.display = 'inline';
+
+    const erroSpanEmail = newElement(
+        inputEmailUsuario.closest('.boxInput')
+    ).innerHTML = '';
+
+})

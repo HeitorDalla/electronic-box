@@ -11,9 +11,9 @@
 
 <body>
 
-    <form action="#" id="form">
-        <div id="cadastro">
-            <h1>Caixa Eletrônico</h1>
+    <div id="cadastro">
+        <h1>Caixa Eletrônico</h1>
+        <form action="#registrado" id="form">
             <div id="inputs">
                 <div class="boxInput">
                     <input type="text" name="nomeUsuario" id="nomeUsuario" placeholder="Usuário" class="inputs">
@@ -22,14 +22,18 @@
                     <input type="password" name="senhaUsuario" id="senhaUsuario" placeholder="Senha" class="inputs">
                 </div>
                 <div class="boxInput">
-                    <input type="email" name="emailUsuario" id="emailUsuario" placeholder="Email" class="inputs">
-                    <!-- Campo de email oculto inicialmente -->
+                    <input type="email" name="emailUsuario" id="emailUsuario" placeholder="Email" class="inputs"> 
                 </div>
             </div>
-            <button id="buttonEntrar">Entrar</button>
-            <button id="buttonCadastrar">Cadastrar</button>
-        </div>
-    </form>
+            <button type="submit" id="buttonEntrar">Entrar</button>
+            <button type="button" id="buttonCadastrar">Cadastrar</button>
+            <button type="button" id="buttonVoltar">Voltar ao entrar</button>
+            </div>
+        </form>
+
+    <!-- <div id="registrado">
+        <h1>Caixa Eletrônico</h1>
+    </div> -->
 
     <script src="script.js"></script>
 </body>
