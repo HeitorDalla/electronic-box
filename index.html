@@ -22,20 +22,20 @@
                     <input type="password" name="senhaUsuario" id="senhaUsuario" placeholder="Senha" class="inputs">
                 </div>
                 <div class="boxInput">
-                    <input type="email" name="emailUsuario" id="emailUsuario" placeholder="Email" class="inputs"> 
+                    <input type="email" name="emailUsuario" id="emailUsuario" placeholder="Email" class="inputs" style="display: none;"> 
                 </div>
             </div>
             <button type="submit" id="buttonEntrar">Entrar</button>
             <button type="button" id="buttonCadastrar">Cadastrar</button>
             <button type="button" id="buttonVoltar">Voltar ao entrar</button>
-            </div>
         </form>
+    </div>
 
-    <div id="registrado">
+    <div id="registrado" style="display: none;">
         <h1>Caixa Eletrônico</h1>
         <div id="dadosCadastrados">
-            <h2 id="bemVindo">Bem-vindo <span class="nomeRegistrado"></span></h2>
-            <span id="conta">Conta: <span class="contaRegistrada"> <!-- Sera gerado um numero aleatorio de 4 digitos para a conta --> </span></span>
+            <h2 id="bemVindo">Bem-vindo <span id="nomeRegistrado"></span></h2>
+            <span id="conta">Conta: <span id="contaRegistrada"><!-- Sera gerado um numero aleatorio de 4 digitos para a conta --></span></span>
             <span id="saldo">Saldo: R$ 0,00</span>
         </div>
         <div id="buttonsRegistros">
@@ -45,7 +45,6 @@
             <button class="buttonsRegistrados buttonSair">Sair</button>
         </div>
     </div>
-    
 
     <script src="script.js"></script>
 </body>

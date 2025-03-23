@@ -2,7 +2,6 @@
 
 // Container cadastro
 const containerCadastro = document.querySelector("#cadastro");
-const form = document.querySelector("#form");
 const containerInputs = document.querySelector("#inputs");
 const boxInput = [...document.querySelectorAll(".boxInput")];
 const inputNomeUsuario = document.querySelector("#nomeUsuario");
@@ -16,19 +15,25 @@ const buttonVoltar = document.querySelector("#buttonVoltar");
 
 // Container registrado
 const containerRegistrado = document.querySelector("#registrado");
+const buttonsRegistrados = [...document.querySelectorAll("#buttonsRegistros .buttonsRegistrados")];
 
+// Variaveis para manipular a quantidade de tempo que o usuario fica nas telas do financeiro
+let intervaloTempo; // Armazenara o tempo
+let tempoIniciado = false; // Ve se o tempo iniciou
 
-// Oculta o campo de email inicialmente
-inputEmailUsuario.style.display = 'none';
-
-// Oculta o container registrado inicialmente
-containerRegistrado.style.display = 'none';
+// Funcao para a verificacao de valor vazia
+function isEmpty (value) {
+    if (value === '') {
+        return true;
+    } else {
+        return false;
+    }
+};
 
 // Função para criar elementos de erro
 function newElement (containerPai) {
     let erroSpan = containerPai.querySelector(".error");
     
-
     if (!erroSpan) { // Se ele nao existir, vai criar um elemento span
         erroSpan = document.createElement("span");
         erroSpan.setAttribute("class", "error");
@@ -41,13 +46,28 @@ function newElement (containerPai) {
 
 };
 
-// Funcao para a verificacao de valor vazia
-function isEmpty (value) {
-    if (value === '') {
-        return true;
-    } else {
-        return false;
-    }
+// Funcao para limpar campos
+function limparCampos () {
+
+    // Limpar todos os campos de erro
+    document.querySelectorAll(".error").forEach((spanError) => {
+        spanError.innerHTML = '';
+    });
+
+    inputNomeUsuario.value = '';
+    inputSenhaUsuario.value = '';
+    inputEmailUsuario.value = '';
+
+};
+
+// Funcao para gerar um codigo de conta novo a cada cliente
+function gerarCodigo () {
+
+    const primeiroDigito = 4;
+    const outrosDigitos = Math.floor(Math.random() * 1000);
+    const codigo = `${primeiroDigito}${String(outrosDigitos).padStart(3, '0')}`;
+
+    return codigo;
 };
 
 // Funcao para validar os campos
@@ -70,61 +90,30 @@ function validacaoDados (value) {
         return validator;
     }
 
+    if (!(inputEmailUsuario.style.display === 'none')) {
+        if (isEmpty(value)) {
+            validator.eValid = false;
+            validator.mensagemErro = 'O campo esta vazio!';
+            return validator;
+        }
+        const expressaoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!expressaoRegex.test(value)) {
+            validator.eValid = false;
+            validator.mensagemErro = 'O email é obrigatório!';
+            return validator;
+        }
+        return validator;
+    }
+
     return validator;
 
 };
 
-function validarEmail (value) {
-    const validator = {
-        eValid: true,
-        mensagemErro: null
-    }
-
-    if (isEmpty(value)) {
-        validator.eValid = false;
-        validator.mensagemErro = 'O campo esta vazio!';
-        return validator;
-    }
-
-    const expressaoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    if (!expressaoRegex.test(value)) {
-        validator.eValid = false;
-        validator.mensagemErro = 'O email é obrigatório!';
-        return validator;
-    }
-
-    return validator;
-}
-
-// Funcao para limpar campos
-function limparCampos () {
-
-    // Limpar campos de erro
-    const erroSpanName = newElement(inputNomeUsuario.closest('.boxInput'));
-    erroSpanName.innerHTML = '';
-    const erroSpanSenha = newElement(inputSenhaUsuario.closest('.boxInput'));
-    erroSpanSenha.innerHTML = '';
-
-    // Limpar os campos de input
-    inputNomeUsuario.innerHTML = '';
-    inputSenhaUsuario.innerHTML = '';
-    inputEmailUsuario.innerHTML = '';
-
-    inputNomeUsuario.value = '';
-    inputSenhaUsuario.value = '';
-    inputEmailUsuario.value = '';
-
-}
-
-// Para fazer as validacoes de inputs
-form.addEventListener("submit", (event) => {
-    event.preventDefault();
+// Funcao
+function validacao () {
 
     let isValid = true;
     const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>';
-
-    inputEmailUsuario.style.display = 'none';
 
     // Nome
     const nomeValue = inputNomeUsuario.value;
@@ -153,55 +142,54 @@ form.addEventListener("submit", (event) => {
     } else {
         erroSpanSenha.innerHTML = '';
     }
+    
+    // Email
+    if (!(inputEmailUsuario.style.display === 'none')) {
+        const emailValue = inputEmailUsuario.value;
+        const containerPaiEmail = inputEmailUsuario.closest(".boxInput");
+        let erroSpanEmail = newElement(containerPaiEmail);
+    
+        const validacaoEmail = validacaoDados(emailValue);
+    
+        if (!validacaoEmail.eValid) {
+            isValid = false;
+            erroSpanEmail.innerHTML = `${iconeErro} ${validacaoEmail.mensagemErro}`
+        } else {
+            erroSpanSenha.innerHTML = '';
+        }
+    }
 
     if (isValid) {
         limparCampos();
         containerCadastro.style.display = 'none';
         containerRegistrado.style.display = 'block';
     }
+};
 
+// Para fazer as validacoes de inputs de nome e senha
+const form = document.querySelector("#form");
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    validacao();
 });
+
 
 // Funcionalidades do botao cadastrar
 buttonCadastrar.addEventListener("click", (event) => {
     event.preventDefault();
 
-    let isValidCadastrar = true;
-    const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>';
-
-    limparCampos();
-
-    // Criar o elemento input email
-    inputEmailUsuario.style.display = 'inline';
-
-    // Oculta o campo do button entrar
+    inputEmailUsuario.style.display = 'block';
     buttonEntrar.style.display = 'none';
 
-    // Validação do botao email
-    const emailValue = inputEmailUsuario.value;
-    const containerPaiEmail = inputEmailUsuario.closest(".boxInput");
-    let erroSpanEmail = newElement(containerPaiEmail);
+    validacao();
 
-    const validacaoEmail = validarEmail(emailValue);
-
-    if (!validacaoEmail.eValid) {
-        isValidCadastrar = false;
-        erroSpanEmail.innerHTML = `${iconeErro} ${validacaoEmail.mensagemErro}`
-    } else {
-        erroSpanSenha.innerHTML = '';
-    }
-
-    if (isValidCadastrar) {
-        alert("Cadastro feito com sucesso!");
-    }
+    limparCampos();
 
 });
 
 // Funcionalidades do botao 'voltar ao entrar'
 buttonVoltar.addEventListener("click", (event) => {
     event.preventDefault();
-
-    // Limpar erros
     limparCampos();
 
     inputEmailUsuario.style.display = 'none';
@@ -214,3 +202,16 @@ buttonVoltar.addEventListener("click", (event) => {
 
 });
 
+// Adicionando tempo para cada tela de movimentação financeira
+// Assim que clicar em cada botao do financeiro, adicionar um tempo de 60 segundos maximos que o usuario pode ficar na tela. Quando o tempo finalizar, volta para o container registrados
+
+
+// Funcionalidades para o botao de depositar
+const buttonDepositar = document.querySelector("#buttonDepositar");
+
+// Função para iniciar o tempo
+function contagemTempo () {
+    const delay = setTimeout (() => {
+
+    }, 500);
+};
