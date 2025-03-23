@@ -173,7 +173,6 @@ form.addEventListener("submit", (event) => {
     validacao();
 });
 
-
 // Funcionalidades do botao cadastrar
 buttonCadastrar.addEventListener("click", (event) => {
     event.preventDefault();
