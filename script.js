@@ -1,5 +1,7 @@
 "use strict"; // Ativa o modo estrito do Javascript
 
+// Container cadastro
+const containerCadastro = document.querySelector("#cadastro");
 const form = document.querySelector("#form");
 const containerInputs = document.querySelector("#inputs");
 const boxInput = [...document.querySelectorAll(".boxInput")];
@@ -7,12 +9,25 @@ const inputNomeUsuario = document.querySelector("#nomeUsuario");
 const inputSenhaUsuario = document.querySelector("#senhaUsuario");
 const inputEmailUsuario = document.querySelector("#emailUsuario");
 
+// Buttons
+const buttonEntrar = document.querySelector("#buttonEntrar");
+const buttonCadastrar = document.querySelector("#buttonCadastrar");
+const buttonVoltar = document.querySelector("#buttonVoltar");
+
+// Container registrado
+const containerRegistrado = document.querySelector("#registrado");
+
+
 // Oculta o campo de email inicialmente
 inputEmailUsuario.style.display = 'none';
+
+// Oculta o container registrado inicialmente
+containerRegistrado.style.display = 'none';
 
 // Função para criar elementos de erro
 function newElement (containerPai) {
     let erroSpan = containerPai.querySelector(".error");
+    
 
     if (!erroSpan) { // Se ele nao existir, vai criar um elemento span
         erroSpan = document.createElement("span");
@@ -140,20 +155,18 @@ form.addEventListener("submit", (event) => {
     }
 
     if (isValid) {
-        alert("Login bem-sucedido!");
+        limparCampos();
+        containerCadastro.style.display = 'none';
+        containerRegistrado.style.display = 'block';
     }
 
 });
-
-const buttonEntrar = document.querySelector("#buttonEntrar");
-const buttonCadastrar = document.querySelector("#buttonCadastrar");
-const buttonVoltar = document.querySelector("#buttonVoltar");
 
 // Funcionalidades do botao cadastrar
 buttonCadastrar.addEventListener("click", (event) => {
     event.preventDefault();
 
-    let isValid = true;
+    let isValidCadastrar = true;
     const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>';
 
     limparCampos();
@@ -172,14 +185,14 @@ buttonCadastrar.addEventListener("click", (event) => {
     const validacaoEmail = validarEmail(emailValue);
 
     if (!validacaoEmail.eValid) {
-        let isValid = false;
+        isValidCadastrar = false;
         erroSpanEmail.innerHTML = `${iconeErro} ${validacaoEmail.mensagemErro}`
     } else {
         erroSpanSenha.innerHTML = '';
     }
 
-    if (isValid) {
-        limparCampos();
+    if (isValidCadastrar) {
+        alert("Cadastro feito com sucesso!");
     }
 
 });
@@ -199,4 +212,5 @@ buttonVoltar.addEventListener("click", (event) => {
         inputEmailUsuario.closest('.boxInput')
     ).innerHTML = '';
 
-})
+});
+

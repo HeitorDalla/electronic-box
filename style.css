@@ -17,6 +17,8 @@ body, html {
     align-items: center;
 }
 
+/* --- Configurações para o Container Cadastro --- */
+
 #cadastro {
     display: flex;
     justify-content: center;
@@ -71,4 +73,58 @@ body, html {
 .error {
     color: red;
     font: normal normal 14px arial, sans-serif;
+}
+
+/* --- Configurações para o Container Registrado --- */
+
+#registrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+    min-width: 500px;
+    border: 1px solid rgba(71, 71, 71, 0.778);
+    border-radius: 6px;
+    background-color: #f4f4f4;
+    padding: 10px;
+    margin: 10px;
+}
+
+#registrado h1 {
+    font: normal bold 28px arial, sans-serif;
+    margin: 20px;
+}
+
+#dadosCadastrados h2 {
+    font: normal bold 20px arial, sans-serif;
+    margin: 10px 20px 20px 20px;
+}
+
+#dadosCadastrados span {
+    display: block;
+    font: normal normal 16px arial, sans-serif;
+    margin: 10px 20px 20px 20px;
+}
+
+#buttonsRegistros {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-flow: row wrap;
+}
+
+.buttonsRegistrados {
+    border-radius: 10px;
+    font-size: 16px;
+    border: 1px solid rgba(219, 219, 219, 0.143);
+    padding: 10px;
+    margin: 10px;
+    background-color: rgba(4, 177, 4, 0.995);
+    color: rgb(255, 255, 255);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.buttonsRegistrados:hover {
+    transform: scale(1.15);
+    cursor: pointer;
 }
