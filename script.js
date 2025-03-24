@@ -75,6 +75,20 @@ function gerarCodigo() {
     return codigo;
 };
 
+// Funcao para pegar o saldo do deposito
+function pegarSaldo (input) {
+    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", ""));
+
+    if () {
+        // Quero que aqui seja feito uma validacao que se for o depositar, soma, se nao for, diminui
+    }
+    let saldoNovo = saldoAtual + parseFloat(input);
+
+    saldo.textContent = `R$: ${saldoNovo.toFixed(2)}`;
+
+    return saldo;
+};
+
 // Funcao para validar os campos
 function validacaoDados(value) {
     const validator = {
@@ -216,32 +230,62 @@ buttonVoltar.addEventListener("click", (event) => {
 
 
 // Funcionalidades para o botao de depositar
-const buttonDepositar = document.querySelector(".buttonDepositar");
-buttonDepositar.addEventListener("click", (event) => {
+const buttonDepositar = document.querySelector(".buttonDepositar").addEventListener("click", (event) => {
     event.preventDefault();
-
     document.querySelector("#deposito").style.display = 'block';
     
-    document.querySelector("#deposito .buttonsDepositar").addEventListener("click", (event) => {
+    document.querySelector("#deposito .depositar").addEventListener("click", (event) => {
         event.preventDefault();
 
         const depositoInput = document.querySelector("#depositar").value;
-
         if (isNaN(depositoInput) || depositoInput <= 0) {
             alert("Digite um valor valido!");
             return;
         }
 
-        let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", ""));
-        let saldoNovo = saldoAtual + parseFloat(depositoInput);
-
-        saldo.textContent = `R$: ${saldoNovo.toFixed(2)}`;
+        getSaldo(depositoInput);
 
         limparCampos();
 
         alert(`Foi depositado um valor de R$ ${depositoInput},00`);
 
         document.querySelector("#deposito").style.display = 'none';
-    })
+    });
+
+    document.querySelector("#deposito .cancelar").addEventListener("click", (event) => {
+        event.preventDefault();
+        document.querySelector("#deposito").style.display = 'none';
+        limparCampos();
+    });
+    
+});
+
+// Funcionalidades para o botao 'sacar'
+const buttonSacar = document.querySelector(".buttonSacar").addEventListener("click", (event) => {
+    event.preventDefault();
+    document.querySelector("#saque").style.display = 'block';
+
+    document.querySelector(".sacar").addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const sacarInput = document.querySelector("#sacar").value;
+        if (sacarInput <= 0 || isNaN(sacarInput)) {
+            alert("Digite valores válidos!");
+            return;
+        }
+
+        getSaldo(sacarInput);
+
+        limparCampos();
+
+        alert(`Foi sacado um R$ ${sacarInput},00`);
+
+        document.querySelector("#saque").style.display = 'none';
+    });
+    document.querySelector("#saque .cancelar").addEventListener("click", (event) => {
+        event.preventDefault();
+        document.querySelector("#sque").style.display = 'none';
+        limparCampos();
+    });
 
 });
