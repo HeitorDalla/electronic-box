@@ -79,10 +79,12 @@ function gerarCodigo() {
 function pegarSaldo (input) {
     let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", ""));
 
-    if () {
-        // Quero que aqui seja feito uma validacao que se for o depositar, soma, se nao for, diminui
+    if (document.querySelector("#deposito").style.display = 'block') {
+        let saldoNovo = saldoAtual + parseFloat(input);
+        return;
+    } else {
+        let saldoNovo = saldoAtual - parseFloat(input);
     }
-    let saldoNovo = saldoAtual + parseFloat(input);
 
     saldo.textContent = `R$: ${saldoNovo.toFixed(2)}`;
 
@@ -257,7 +259,7 @@ const buttonDepositar = document.querySelector(".buttonDepositar").addEventListe
         document.querySelector("#deposito").style.display = 'none';
         limparCampos();
     });
-    
+
 });
 
 // Funcionalidades para o botao 'sacar'
