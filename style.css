@@ -100,10 +100,12 @@ body, html {
     margin: 10px 20px 20px 20px;
 }
 
-#dadosCadastrados span {
-    display: block;
+#dadosCadastrados #contaRegistrado {
     font: normal normal 16px arial, sans-serif;
-    margin: 10px 20px 20px 20px;
+}
+
+#dadosCadastrados #saldoRegistrado {
+    font: normal normal 16px arial, sans-serif;
 }
 
 #buttonsRegistros {
@@ -125,6 +127,37 @@ body, html {
 }
 
 .buttonsRegistrados:hover {
-    transform: scale(1.15);
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#deposito h2 {
+    font: normal bold 20px arial, sans-serif;
+    margin: 10px 20px 20px 20px;
+}
+
+#deposito input {
+    margin: 10px 20px 20px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    border: 1px solid rgba(229, 229, 229, 0.143);
+    padding: 10px;
+    margin: 10px;
+    color: #000;
+}
+
+#deposito button {
+    border-radius: 10px;
+    font-size: 16px;
+    border: 1px solid rgba(219, 219, 219, 0.143);
+    padding: 10px;
+    margin: 10px;
+    background-color: rgba(4, 177, 4, 0.995);
+    color: rgb(255, 255, 255);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#deposito button:hover {
+    transform: scale(1.1);
     cursor: pointer;
 }
