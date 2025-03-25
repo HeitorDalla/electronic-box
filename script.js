@@ -76,19 +76,37 @@ function gerarCodigo() {
 };
 
 // Funcao para pegar o saldo do deposito
-function pegarSaldo (input) {
-    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", ""));
+function getSaldo (input) {
+    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").trim());
 
-    if (document.querySelector("#deposito").style.display = 'block') {
-        let saldoNovo = saldoAtual + parseFloat(input);
-        return;
+    let saldoNovo; // Armazenar o saldo dependendo da conta a ser feita
+
+    if (document.querySelector("#deposito").style.display === 'block') {
+        saldoNovo = saldoAtual + parseFloat(input);
     } else {
-        let saldoNovo = saldoAtual - parseFloat(input);
+        saldoNovo = saldoAtual - parseFloat(input);
     }
 
     saldo.textContent = `R$: ${saldoNovo.toFixed(2)}`;
 
     return saldo;
+};
+
+// Funcao para o botao cancelar de dentro dos containers de manipulação do financeiro
+function botaoCancelar () {
+    if (document.querySelector("#deposito").style.display === 'block') {
+        document.querySelector("#deposito .cancelar").addEventListener("click", (event) => {
+            event.preventDefault();
+            document.querySelector("#deposito").style.display = 'none';
+            limparCampos();
+        });
+    } else {
+        document.querySelector("#saque .cancelar").addEventListener("click", (event) => {
+            event.preventDefault();
+            document.querySelector("#saque").style.display = 'none';
+            limparCampos();
+        });
+    }
 };
 
 // Funcao para validar os campos
@@ -191,16 +209,24 @@ function validacao() {
     }
 };
 
+// Evento de que quando o site for carregado, o inputNome seja o foco
+document.addEventListener("DOMContentLoaded", () => {
+    inputNomeUsuario.focus()
+});
+
 // Para fazer as validacoes de inputs de nome e senha
 const form = document.querySelector("#form");
 form.addEventListener("submit", (event) => {
     event.preventDefault();
+    inputNomeUsuario.focus();
     validacao();
 });
 
 // Funcionalidades do botao cadastrar
 buttonCadastrar.addEventListener("click", (event) => {
     event.preventDefault();
+
+    inputNomeUsuario.focus();
 
     inputEmailUsuario.style.display = 'block';
     buttonEntrar.style.display = 'none';
@@ -227,10 +253,6 @@ buttonVoltar.addEventListener("click", (event) => {
 
 });
 
-// Adicionando tempo para cada tela de movimentação financeira
-// Assim que clicar em cada botao do financeiro, adicionar um tempo de 60 segundos maximos que o usuario pode ficar na tela. Quando o tempo finalizar, volta para o container registrados
-
-
 // Funcionalidades para o botao de depositar
 const buttonDepositar = document.querySelector(".buttonDepositar").addEventListener("click", (event) => {
     event.preventDefault();
@@ -254,11 +276,7 @@ const buttonDepositar = document.querySelector(".buttonDepositar").addEventListe
         document.querySelector("#deposito").style.display = 'none';
     });
 
-    document.querySelector("#deposito .cancelar").addEventListener("click", (event) => {
-        event.preventDefault();
-        document.querySelector("#deposito").style.display = 'none';
-        limparCampos();
-    });
+    botaoCancelar();
 
 });
 
@@ -272,7 +290,7 @@ const buttonSacar = document.querySelector(".buttonSacar").addEventListener("cli
 
         const sacarInput = document.querySelector("#sacar").value;
         if (sacarInput <= 0 || isNaN(sacarInput)) {
-            alert("Digite valores válidos!");
+            alert("Digite um valor válido!");
             return;
         }
 
@@ -280,14 +298,22 @@ const buttonSacar = document.querySelector(".buttonSacar").addEventListener("cli
 
         limparCampos();
 
-        alert(`Foi sacado um R$ ${sacarInput},00`);
+        alert(`Foi sacado um R$ ${sacarInput.toFixed(2)}`);
 
         document.querySelector("#saque").style.display = 'none';
     });
-    document.querySelector("#saque .cancelar").addEventListener("click", (event) => {
-        event.preventDefault();
-        document.querySelector("#sque").style.display = 'none';
-        limparCampos();
-    });
+
+    botaoCancelar();
 
 });
+
+// Erros para arrumar
+
+// Botao Cadastrar (arrumar tudo, todas as funcionalidades)
+// Botao de depositar (esta dando erro ao digitar um valor muito alto)
+// Botao de sacar (esta dando erro 'Nan')
+// Fazer as funcionalidades do botao de historico de transacoes
+// Fazer as funcionalidades do botao de sair
+// Adicionando tempo para cada tela de movimentação financeira. Assim que clicar em cada botao do financeiro, adicionar um tempo de 60 segundos maximos que o usuario pode ficar na tela. Quando o tempo finalizar, volta para o container registrados
+// Adicionar um objeto que contenha tudo
+// Melhorar o codigo em si
