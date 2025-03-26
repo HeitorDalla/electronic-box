@@ -1,36 +1,68 @@
 "use strict"; // Ativa o modo estrito do Javascript
 
-// Container cadastro
+// Container Cadastro
 const containerCadastro = document.querySelector("#cadastro");
 const containerInputs = document.querySelector("#inputs");
 const boxInput = [...document.querySelectorAll(".boxInput")];
 const inputNomeUsuario = document.querySelector("#nomeUsuario");
 const inputSenhaUsuario = document.querySelector("#senhaUsuario");
 const inputEmailUsuario = document.querySelector("#emailUsuario");
-
-// Buttons
 const buttonEntrar = document.querySelector("#buttonEntrar");
 const buttonCadastrar = document.querySelector("#buttonCadastrar");
 const buttonVoltar = document.querySelector("#buttonVoltar");
 
-// Container registrado
+// Container Registrado
 const containerRegistrado = document.querySelector("#registrado");
 const nome = document.querySelector("#nome");
 const conta = document.querySelector("#conta")
 const saldo = document.querySelector("#saldo");
+// Buttons do Container Registrado
 const buttonsRegistrados = [...document.querySelectorAll("#buttonsRegistros .buttonsRegistrados")];
+const buttonDepositar = document.querySelector(".buttonDepositar");
+const buttonSacar = document.querySelector(".buttonSacar");
+const buttonHistorico = document.querySelector(".buttonHistorico");
+const buttonSair = document.querySelector(".buttonSair");
+
+// Container Deposito
+const deposito = document.querySelector("#deposito");
+const depositarInput = document.querySelector("#depositarInput");
+const depositarButton = document.querySelector("#deposito .depositarButton");
+
+// Container Saque
+const saque = document.querySelector("#saque");
+const sacarInput = document.querySelector("#sacarInput");
+const sacarButton = document.querySelector("#saque .sacarButton");
+
+const cancelar = document.querySelector(".cancelar");
+
 
 // Variaveis para manipular a quantidade de tempo que o usuario fica nas telas do financeiro
 let intervaloTempo; // Armazenara o tempo
 let tempoIniciado = false; // Ve se o tempo iniciou
 
-// Funcao para a verificacao de valor vazia
+// Funcao genérica para a verificacao de valor vazia
 function isEmpty(value) {
     if (value === '') {
         return true;
     } else {
         return false;
     }
+};
+
+// Funcao genérica para limpar campos
+function limparCampos() {
+
+    // Limpar todos os campos de erro
+    document.querySelectorAll(".error").forEach((spanError) => {
+        spanError.innerHTML = '';
+    });
+
+    inputNomeUsuario.value = '';
+    inputSenhaUsuario.value = '';
+    inputEmailUsuario.value = '';
+
+    depositarInput.value = '';
+
 };
 
 // Função para criar elementos de erro
@@ -49,22 +81,6 @@ function newElement(containerPai) {
 
 };
 
-// Funcao para limpar campos
-function limparCampos() {
-
-    // Limpar todos os campos de erro
-    document.querySelectorAll(".error").forEach((spanError) => {
-        spanError.innerHTML = '';
-    });
-
-    inputNomeUsuario.value = '';
-    inputSenhaUsuario.value = '';
-    inputEmailUsuario.value = '';
-
-    document.querySelector("#depositar").value = '';
-
-};
-
 // Funcao para gerar um codigo de conta novo a cada cliente
 function gerarCodigo() {
 
@@ -76,34 +92,33 @@ function gerarCodigo() {
 };
 
 // Funcao para pegar o saldo do deposito
-function getSaldo (input) {
+function getSaldo (inputValor) {
     let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").trim());
 
-    let saldoNovo; // Armazenar o saldo dependendo da conta a ser feita
+    let saldoNovo = saldoAtual + inputValor;
 
-    if (document.querySelector("#deposito").style.display === 'block') {
-        saldoNovo = saldoAtual + parseFloat(input);
-    } else {
-        saldoNovo = saldoAtual - parseFloat(input);
+    if (saldoNovo < 0) {
+        alert(`Saldo insuficiente!`);
+        return saldoAtual;
     }
 
     saldo.textContent = `R$: ${saldoNovo.toFixed(2)}`;
 
-    return saldo;
+    return saldoNovo;
 };
 
 // Funcao para o botao cancelar de dentro dos containers de manipulação do financeiro
 function botaoCancelar () {
-    if (document.querySelector("#deposito").style.display === 'block') {
-        document.querySelector("#deposito .cancelar").addEventListener("click", (event) => {
+    if (deposito.style.display === 'block') {
+        deposito.querySelector(".cancelar").addEventListener("click", (event) => {
             event.preventDefault();
-            document.querySelector("#deposito").style.display = 'none';
+            deposito.style.display = 'none';
             limparCampos();
         });
     } else {
-        document.querySelector("#saque .cancelar").addEventListener("click", (event) => {
+        saque.querySelector(".cancelar").addEventListener("click", (event) => {
             event.preventDefault();
-            document.querySelector("#saque").style.display = 'none';
+            saque.style.display = 'none';
             limparCampos();
         });
     }
@@ -148,14 +163,15 @@ function validacaoDados(value) {
 
 };
 
-// Funcao
-function validacao() {
+// Para fazer as validacoes de inputs de nome e senha
+document.querySelector("#form").addEventListener("submit", (event) => {
+    event.preventDefault();
 
     let isValid = true;
     const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>';
 
     // Nome
-    const nomeValue = inputNomeUsuario.value;
+    const nomeValue = inputNomeUsuario.value.trim();
     const containerPaiNome = inputNomeUsuario.closest(".boxInput");
     let erroSpanName = newElement(containerPaiNome);
 
@@ -169,7 +185,7 @@ function validacao() {
     }
 
     // Senha
-    const senhaValue = inputSenhaUsuario.value;
+    const senhaValue = inputSenhaUsuario.value.trim();
     const containerPaiSenha = inputSenhaUsuario.closest(".boxInput");
     let erroSpanSenha = newElement(containerPaiSenha);
 
@@ -182,9 +198,9 @@ function validacao() {
         erroSpanSenha.innerHTML = '';
     }
 
-    // Email
-    if (!(inputEmailUsuario.style.display === 'none')) {
-        const emailValue = inputEmailUsuario.value;
+    // E-mail
+    if (inputEmailUsuario.style.display !== 'none') {
+        const emailValue = inputEmailUsuario.value.trim();
         const containerPaiEmail = inputEmailUsuario.closest(".boxInput");
         let erroSpanEmail = newElement(containerPaiEmail);
 
@@ -205,35 +221,8 @@ function validacao() {
 
         // Colocar informacoes do usuario
         nome.textContent = nomeValue;
-        conta.textContent = gerarCodigo();
+        const codigoConta = conta.textContent = gerarCodigo();
     }
-};
-
-// Evento de que quando o site for carregado, o inputNome seja o foco
-document.addEventListener("DOMContentLoaded", () => {
-    inputNomeUsuario.focus()
-});
-
-// Para fazer as validacoes de inputs de nome e senha
-const form = document.querySelector("#form");
-form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    inputNomeUsuario.focus();
-    validacao();
-});
-
-// Funcionalidades do botao cadastrar
-buttonCadastrar.addEventListener("click", (event) => {
-    event.preventDefault();
-
-    inputNomeUsuario.focus();
-
-    inputEmailUsuario.style.display = 'block';
-    buttonEntrar.style.display = 'none';
-
-    validacao();
-
-    limparCampos();
 
 });
 
@@ -247,21 +236,18 @@ buttonVoltar.addEventListener("click", (event) => {
 
     buttonEntrar.style.display = 'inline';
 
-    const erroSpanEmail = newElement(
-        inputEmailUsuario.closest('.boxInput')
-    ).innerHTML = '';
-
 });
 
 // Funcionalidades para o botao de depositar
-const buttonDepositar = document.querySelector(".buttonDepositar").addEventListener("click", (event) => {
-    event.preventDefault();
-    document.querySelector("#deposito").style.display = 'block';
+buttonDepositar.addEventListener("click", (event) => {
+    event.preventDefault();  
+
+    deposito.style.display = 'block';
     
-    document.querySelector("#deposito .depositar").addEventListener("click", (event) => {
+    deposito.querySelector(".depositarButton").addEventListener("click", (event) => {
         event.preventDefault();
 
-        const depositoInput = document.querySelector("#depositar").value;
+        const depositoInput = parseFloat(document.querySelector("#depositarInput").value);
         if (isNaN(depositoInput) || depositoInput <= 0) {
             alert("Digite um valor valido!");
             return;
@@ -273,7 +259,7 @@ const buttonDepositar = document.querySelector(".buttonDepositar").addEventListe
 
         alert(`Foi depositado um valor de R$ ${depositoInput},00`);
 
-        document.querySelector("#deposito").style.display = 'none';
+        deposito.style.display = 'none';
     });
 
     botaoCancelar();
@@ -281,29 +267,44 @@ const buttonDepositar = document.querySelector(".buttonDepositar").addEventListe
 });
 
 // Funcionalidades para o botao 'sacar'
-const buttonSacar = document.querySelector(".buttonSacar").addEventListener("click", (event) => {
+buttonSacar.addEventListener("click", (event) => {
     event.preventDefault();
-    document.querySelector("#saque").style.display = 'block';
 
-    document.querySelector(".sacar").addEventListener("click", (event) => {
+    saque.style.display = 'block';
+
+    deposito.querySelector(".sacar").addEventListener("click", (event) => {
         event.preventDefault();
 
-        const sacarInput = document.querySelector("#sacar").value;
-        if (sacarInput <= 0 || isNaN(sacarInput)) {
+        const sacarInput = parseFloat(document.querySelector("#sacar").value);
+        if (isNaN(sacarInput) || sacarInput <= 0) {
             alert("Digite um valor válido!");
             return;
         }
 
-        getSaldo(sacarInput);
+        getSaldo(-sacarInput);
 
         limparCampos();
 
         alert(`Foi sacado um R$ ${sacarInput.toFixed(2)}`);
 
-        document.querySelector("#saque").style.display = 'none';
+        saque.style.display = 'none';
     });
 
     botaoCancelar();
+
+});
+
+// Funcionalidades para o botao de 'historico'
+buttonHistorico.addEventListener("click", (event) => {
+    event.preventDefault();
+
+
+});
+
+// Funcionalidades para o botao 'sair'
+buttonSair.addEventListener("click", (event) => {
+    event.preventDefault();
+
 
 });
 
@@ -312,6 +313,7 @@ const buttonSacar = document.querySelector(".buttonSacar").addEventListener("cli
 // Botao Cadastrar (arrumar tudo, todas as funcionalidades)
 // Botao de depositar (esta dando erro ao digitar um valor muito alto)
 // Botao de sacar (esta dando erro 'Nan')
+// Não permitir que dois containers abram ao mesmo tempo
 // Fazer as funcionalidades do botao de historico de transacoes
 // Fazer as funcionalidades do botao de sair
 // Adicionando tempo para cada tela de movimentação financeira. Assim que clicar em cada botao do financeiro, adicionar um tempo de 60 segundos maximos que o usuario pode ficar na tela. Quando o tempo finalizar, volta para o container registrados

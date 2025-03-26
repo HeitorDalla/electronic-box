@@ -25,9 +25,11 @@
                     <input type="email" name="emailUsuario" id="emailUsuario" placeholder="Email" class="inputs" style="display: none;"> 
                 </div>
             </div>
-            <button type="submit" id="buttonEntrar">Entrar</button>
-            <button type="button" id="buttonCadastrar">Cadastrar</button>
-            <button type="button" id="buttonVoltar">Voltar ao entrar</button>
+            <div id="containerCadastro_buttons">
+                <button type="submit" id="buttonEntrar">Entrar</button>
+                <button type="submit" id="buttonCadastrar">Cadastrar</button>
+                <button type="button" id="buttonVoltar">Voltar ao entrar</button>
+            </div>
         </form>
     </div>
 
@@ -44,21 +46,32 @@
             <button class="buttonsRegistrados buttonHistorico">Histórico de transações</button>
             <button class="buttonsRegistrados buttonSair">Sair</button>
         </div>
+
+        <!-- Container Deposito -->
         <div id="deposito" style="display: none;">
             <h2>Depósito</h2>
-            <input type="number" name="depositar" id="depositar">
-            <button class="buttonsDepositar depositar">Depositar</button>
+            <input type="number" name="depositar" id="depositarInput">
+            <button class="buttonsDepositar depositarButton">Depositar</button>
             <button class="buttonsDepositar cancelar">Cancelar</button>
         </div>
+
+        <!-- Container Saque-->
         <div id="saque" style="display: none;">
             <h2>Saque</h2>
-            <input type="number" name="sacar" id="sacar">
-            <button class="buttonsSacar sacar">Sacar</button>
+            <input type="number" name="sacar" id="sacarInput">
+            <button class="buttonsSacar sacarButton">Sacar</button>
             <button class="buttonsSacar cancelar">Cancelar</button>
         </div>
+
+        <!-- Container Historico de Transações -->
         <div id="hitoricoTransacoes" style="display: none;">
 
         </div>
+        
+        <!-- Container Sair -->
+         <div id="sair">
+
+         </div>
     </div>
 
     <script src="script.js"></script>
