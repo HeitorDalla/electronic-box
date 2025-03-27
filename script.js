@@ -93,7 +93,7 @@ function gerarCodigo() {
 
 // Funcao para pegar o saldo do deposito
 function getSaldo (inputValor) {
-    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").trim());
+    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").trim().replace(",", "."));
 
     let saldoNovo = saldoAtual + inputValor;
 
@@ -102,7 +102,7 @@ function getSaldo (inputValor) {
         return saldoAtual;
     }
 
-    saldo.textContent = `R$: ${saldoNovo.toFixed(2)}`;
+    saldo.textContent = `R$: ${saldoNovo.toFixed(2).replace(".", ",")}`;
 
     return saldoNovo;
 };
@@ -257,7 +257,7 @@ buttonDepositar.addEventListener("click", (event) => {
 
         limparCampos();
 
-        alert(`Foi depositado um valor de R$ ${depositoInput},00`);
+        alert(`Foi depositado um valor de R$ ${depositoInput}`);
 
         deposito.style.display = 'none';
     });
@@ -272,10 +272,10 @@ buttonSacar.addEventListener("click", (event) => {
 
     saque.style.display = 'block';
 
-    deposito.querySelector(".sacar").addEventListener("click", (event) => {
+    saque.querySelector(".sacarButton").addEventListener("click", (event) => {
         event.preventDefault();
 
-        const sacarInput = parseFloat(document.querySelector("#sacar").value);
+        const sacarInput = parseFloat(document.querySelector("#sacarInput").value);
         if (isNaN(sacarInput) || sacarInput <= 0) {
             alert("Digite um valor válido!");
             return;
@@ -285,7 +285,7 @@ buttonSacar.addEventListener("click", (event) => {
 
         limparCampos();
 
-        alert(`Foi sacado um R$ ${sacarInput.toFixed(2)}`);
+        alert(`Foi sacado um R$ ${sacarInput.toFixed(2).replace(".", ",")}`);
 
         saque.style.display = 'none';
     });
@@ -305,13 +305,15 @@ buttonHistorico.addEventListener("click", (event) => {
 buttonSair.addEventListener("click", (event) => {
     event.preventDefault();
 
+    registrado.style.display = 'none';
+    
 
+    limparCampos();
 });
 
 // Erros para arrumar
 
 // Botao Cadastrar (arrumar tudo, todas as funcionalidades)
-// Botao de depositar (esta dando erro ao digitar um valor muito alto)
 // Botao de sacar (esta dando erro 'Nan')
 // Não permitir que dois containers abram ao mesmo tempo
 // Fazer as funcionalidades do botao de historico de transacoes
