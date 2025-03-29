@@ -25,16 +25,15 @@ const buttonSair = document.querySelector(".buttonSair");
 
 // Container Deposito
 const deposito = document.querySelector("#deposito");
-const depositarInput = document.querySelector("#depositarInput");
+const depositarInput = document.querySelector("#deposito #depositarInput");
 const depositarButton = document.querySelector("#deposito .depositarButton");
 
 // Container Saque
 const saque = document.querySelector("#saque");
-const sacarInput = document.querySelector("#sacarInput");
+const sacarInput = document.querySelector("#saque #sacarInput");
 const sacarButton = document.querySelector("#saque .sacarButton");
 
 const cancelar = document.querySelector(".cancelar");
-
 
 // Variaveis para manipular a quantidade de tempo que o usuario fica nas telas do financeiro
 let intervaloTempo; // Armazenara o tempo
@@ -47,6 +46,20 @@ function isEmpty(value) {
     } else {
         return false;
     }
+};
+
+// Função para criar elementos de erro
+function newElement(containerPai) {
+    let erroSpan = containerPai.querySelector(".error");
+    if (!erroSpan) { // Se ele nao existir, vai criar um elemento span
+        erroSpan = document.createElement("span");
+        erroSpan.setAttribute("class", "error");
+        erroSpan.setAttribute("display", "block");
+        erroSpan.innerHTML = '';
+        containerPai.appendChild(erroSpan);
+    }
+
+    return erroSpan;
 };
 
 // Funcao genérica para limpar campos
@@ -62,23 +75,14 @@ function limparCampos() {
     inputEmailUsuario.value = '';
 
     depositarInput.value = '';
+    sacarInput.value = '';
 
 };
 
-// Função para criar elementos de erro
-function newElement(containerPai) {
-    let erroSpan = containerPai.querySelector(".error");
-
-    if (!erroSpan) { // Se ele nao existir, vai criar um elemento span
-        erroSpan = document.createElement("span");
-        erroSpan.setAttribute("class", "error");
-        erroSpan.setAttribute("display", "block");
-        erroSpan.innerHTML = '';
-        containerPai.appendChild(erroSpan);
-    }
-
-    return erroSpan;
-
+// Funcao para evitar que dois containers sejam abertos ao mesmo tempo
+function esconderContainers () {
+    deposito.style.display = 'none';
+    saque.style.display = 'none';
 };
 
 // Funcao para gerar um codigo de conta novo a cada cliente
@@ -93,9 +97,16 @@ function gerarCodigo() {
 
 // Funcao para pegar o saldo do deposito
 function getSaldo (inputValor) {
-    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").trim().replace(",", "."));
+    
+    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").replace(",", ".").trim());
 
-    let saldoNovo = saldoAtual + inputValor;
+    let saldoNovo;
+
+    if (deposito.style.display === 'block') {
+        saldoNovo = saldoAtual + inputValor;
+    } else {
+        saldoNovo = saldoAtual - inputValor;
+    }
 
     if (saldoNovo < 0) {
         alert(`Saldo insuficiente!`);
@@ -167,16 +178,14 @@ function validacaoDados(value) {
 document.querySelector("#form").addEventListener("submit", (event) => {
     event.preventDefault();
 
-    let isValid = true;
-    const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>';
+    let isValid = true; // Validação global dos campos
+    const iconeErro = '<i class="fa-solid fa-circle-exclamation"></i>'; // Icon de erro
 
     // Nome
     const nomeValue = inputNomeUsuario.value.trim();
-    const containerPaiNome = inputNomeUsuario.closest(".boxInput");
-    let erroSpanName = newElement(containerPaiNome);
+    const erroSpanName = newElement(inputNomeUsuario.closest(".boxInput")); // Vai passar o container do input como referência
 
     const validacaoNome = validacaoDados(nomeValue);
-
     if (!validacaoNome.eValid) {
         isValid = false;
         erroSpanName.innerHTML = `${iconeErro} ${validacaoNome.mensagemErro}`;
@@ -186,11 +195,9 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 
     // Senha
     const senhaValue = inputSenhaUsuario.value.trim();
-    const containerPaiSenha = inputSenhaUsuario.closest(".boxInput");
-    let erroSpanSenha = newElement(containerPaiSenha);
+    const erroSpanSenha = newElement(inputSenhaUsuario.closest(".boxInput"));
 
     const validacaoSenha = validacaoDados(senhaValue);
-
     if (!validacaoSenha.eValid) {
         isValid = false;
         erroSpanSenha.innerHTML = `${iconeErro} ${validacaoSenha.mensagemErro}`;
@@ -221,7 +228,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 
         // Colocar informacoes do usuario
         nome.textContent = nomeValue;
-        const codigoConta = conta.textContent = gerarCodigo();
+        conta.textContent = gerarCodigo();
     }
 
 });
@@ -242,13 +249,16 @@ buttonVoltar.addEventListener("click", (event) => {
 buttonDepositar.addEventListener("click", (event) => {
     event.preventDefault();  
 
+    esconderContainers();
+
     deposito.style.display = 'block';
     
     deposito.querySelector(".depositarButton").addEventListener("click", (event) => {
         event.preventDefault();
 
-        const depositoInput = parseFloat(document.querySelector("#depositarInput").value);
-        if (isNaN(depositoInput) || depositoInput <= 0) {
+        const inputValueDepositar = depositarInput.value.trim(); // Pegar o valor do campo de input
+        const depositoInput = parseFloat(inputValueDepositar); // Transformar em numero o input que o usuário digitar
+        if (isNaN(depositoInput) || depositoInput <= 0) { // Verificação para ver se é um numero e se ele nao é igual a zero
             alert("Digite um valor valido!");
             return;
         }
@@ -261,7 +271,7 @@ buttonDepositar.addEventListener("click", (event) => {
 
         deposito.style.display = 'none';
     });
-
+    
     botaoCancelar();
 
 });
@@ -270,22 +280,25 @@ buttonDepositar.addEventListener("click", (event) => {
 buttonSacar.addEventListener("click", (event) => {
     event.preventDefault();
 
+    esconderContainers();
+
     saque.style.display = 'block';
 
     saque.querySelector(".sacarButton").addEventListener("click", (event) => {
         event.preventDefault();
 
-        const sacarInput = parseFloat(document.querySelector("#sacarInput").value);
-        if (isNaN(sacarInput) || sacarInput <= 0) {
+        const inputValueSacar = sacarInput.value.trim(); // Peguei o valor digitado no input
+        const sacarValor = parseFloat(inputValueSacar); // Transformei o valor digitado em número
+        if (isNaN(sacarValor) || sacarValor <= 0) {
             alert("Digite um valor válido!");
             return;
-        }
+        } 
 
-        getSaldo(-sacarInput);
+        getSaldo(sacarValor);
 
         limparCampos();
 
-        alert(`Foi sacado um R$ ${sacarInput.toFixed(2).replace(".", ",")}`);
+        alert(`Foi sacado um valor de R$ ${sacarValor}`);
 
         saque.style.display = 'none';
     });
@@ -298,26 +311,23 @@ buttonSacar.addEventListener("click", (event) => {
 buttonHistorico.addEventListener("click", (event) => {
     event.preventDefault();
 
-
+    
 });
 
 // Funcionalidades para o botao 'sair'
 buttonSair.addEventListener("click", (event) => {
     event.preventDefault();
 
-    registrado.style.display = 'none';
+    containerRegistrado.style.display = 'none';
+    containerCadastro.style.display = 'block';
+    containerCadastro.style.textAlign = 'center';
     
-
     limparCampos();
 });
 
 // Erros para arrumar
 
 // Botao Cadastrar (arrumar tudo, todas as funcionalidades)
-// Botao de sacar (esta dando erro 'Nan')
-// Não permitir que dois containers abram ao mesmo tempo
+// Botao de sacar (esta retornando 'Nan' quando saca alguma produto)
 // Fazer as funcionalidades do botao de historico de transacoes
-// Fazer as funcionalidades do botao de sair
 // Adicionando tempo para cada tela de movimentação financeira. Assim que clicar em cada botao do financeiro, adicionar um tempo de 60 segundos maximos que o usuario pode ficar na tela. Quando o tempo finalizar, volta para o container registrados
-// Adicionar um objeto que contenha tudo
-// Melhorar o codigo em si

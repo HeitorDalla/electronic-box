@@ -26,8 +26,8 @@
                 </div>
             </div>
             <div id="containerCadastro_buttons">
-                <button type="submit" id="buttonEntrar">Entrar</button>
-                <button type="submit" id="buttonCadastrar">Cadastrar</button>
+                <input type="submit" id="buttonEntrar" value="Entrar">
+                <input type="submit" id="buttonCadastrar" value="Cadastrar">
                 <button type="button" id="buttonVoltar">Voltar ao entrar</button>
             </div>
         </form>
@@ -35,11 +35,13 @@
 
     <div id="registrado" style="display: none;"> <!-- Inicialmente oculto -->
         <h1>Caixa Eletrônico</h1>
+        
         <div id="dadosCadastrados">
             <h2 id="nomeRegistrado">Bem-vindo, <span id="nome"></span></h2>
             <h2 id="contaRegistrado">Conta: <span id="conta"></span></h2>
             <h2 id="saldoRegistrado">Saldo: <span id="saldo">R$ 0,00</span></h2>
         </div>
+
         <div id="buttonsRegistros">
             <button class="buttonsRegistrados buttonDepositar">Depositar</button>
             <button class="buttonsRegistrados buttonSacar">Sacar</button>
