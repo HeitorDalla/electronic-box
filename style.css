@@ -141,12 +141,12 @@ body, html {
     cursor: pointer;
 }
 
-#deposito h2 {
+#deposito h2, #saque h2, #historicoTransacoes h2, #historicoTransacoes h2 {
     font: normal bold 20px arial, sans-serif;
     margin: 10px 20px 20px 20px;
 }
 
-#deposito input {
+#deposito input, #saque input {
     margin: 10px 20px 20px 20px;
     border-radius: 10px;
     font-size: 16px;
@@ -156,7 +156,7 @@ body, html {
     color: #000;
 }
 
-#deposito button {
+#deposito button, #saque button, #historicoTransacoes button {
     border-radius: 10px;
     font-size: 16px;
     border: 1px solid rgba(219, 219, 219, 0.143);
@@ -167,42 +167,14 @@ body, html {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-#deposito button:hover {
+#deposito button:hover, #saque button:hover, #historicoTransacoes button {
     transform: scale(1.1);
     cursor: pointer;
 }
 
-
-
-
-
-#saque h2 {
-    font: normal bold 20px arial, sans-serif;
-    margin: 10px 20px 20px 20px;
-}
-
-#saque input {
-    margin: 10px 20px 20px 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    border: 1px solid rgba(229, 229, 229, 0.143);
+.operacao {
     padding: 10px;
     margin: 10px;
-    color: #000;
-}
-
-#saque button {
+    border: 1px solid rgba(119, 119, 119, 0.165);
     border-radius: 10px;
-    font-size: 16px;
-    border: 1px solid rgba(219, 219, 219, 0.143);
-    padding: 10px;
-    margin: 10px;
-    background-color: rgba(4, 177, 4, 0.995);
-    color: rgb(255, 255, 255);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-#saque button:hover {
-    transform: scale(1.1);
-    cursor: pointer;
 }

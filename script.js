@@ -40,6 +40,8 @@ const historicoTransacoes = document.querySelector("#historicoTransacoes");
 const historico = historicoTransacoes.querySelector("#historico");
 const buttonVoltarHistorico = historicoTransacoes.querySelector("#voltar");
 
+let transacoes = []; // Armazenar todas as transacoes
+
 // Variaveis para manipular a quantidade de tempo que o usuario fica nas telas do financeiro
 let intervaloTempo; // Armazenara o tempo
 let tempoIniciado = false; // Ve se o tempo iniciou
@@ -107,7 +109,7 @@ function getSaldo (inputValor, tipo) {
 
     let saldoNovo;
 
-    if (tipo === 'deposito') {
+    if (tipo === 'Deposito') {
         saldoNovo = saldoAtual + inputValor;
     } else {
         saldoNovo = saldoAtual - inputValor;
@@ -121,6 +123,19 @@ function getSaldo (inputValor, tipo) {
     saldo.textContent = `R$: ${saldoNovo.toFixed(2).replace(".", ",")}`;
 
     return saldoNovo;
+};
+
+// Funcao para mostrar as transações financeiras
+function mostrarTransacoes () {
+    const containerHistorico = document.querySelector("#historicoTransacoes #historico");
+    containerHistorico.innerHTML = ''; // Limpa o historico antigo
+
+    transacoes.forEach((transacao) => {
+        const operacao = document.createElement("div");
+        operacao.setAttribute("class", "operacao");
+        operacao.textContent = `${transacao.tipoOper}: R$ ${transacao.valor.toFixed(2).replace(".", ",")}`;
+        containerHistorico.appendChild(operacao);
+    });
 };
 
 // Funcao para validar os campos
@@ -223,6 +238,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 
 // Funcionalidades do botao de cadastrar
 buttonCadastrar.addEventListener("click", (event) => {
+    event.preventDefault();
     limparCampos();
     inputEmailUsuario.style.display = 'block';
 }); 
@@ -254,11 +270,16 @@ buttonDepositar.addEventListener("click", (event) => {
             return;
         }
 
-        getSaldo(depositoInput, 'deposito');
+        getSaldo(depositoInput, 'Deposito');
 
         limparCampos();
 
         alert(`Foi depositado um valor de R$ ${depositoInput}`);
+
+        transacoes.push({
+            tipoOper: 'Deposito',
+            valor: depositoInput
+        });
 
         deposito.style.display = 'none';
     });
@@ -288,13 +309,18 @@ buttonSacar.addEventListener("click", (event) => {
         if (isNaN(sacarValor) || sacarValor <= 0) {
             alert("Digite um valor válido!");
             return;
-        } 
+        }
 
-        getSaldo(sacarValor, 'saque');
+        getSaldo(sacarValor, 'Saque');
 
         limparCampos();
 
         alert(`Foi sacado um valor de R$ ${sacarValor}`);
+
+        transacoes.push({
+            tipoOper: 'Saque',
+            valor: sacarValor
+        });
 
         saque.style.display = 'none';
     });
@@ -311,7 +337,20 @@ buttonSacar.addEventListener("click", (event) => {
 buttonHistorico.addEventListener("click", (event) => {
     event.preventDefault();
 
-    
+    esconderContainers();
+
+    historicoTransacoes.style.display = 'block';
+
+    mostrarTransacoes();
+
+    // Funcionalidades do campo sair do historico de transações
+    buttonVoltarHistorico.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        limparCampos();
+
+        historicoTransacoes.style.display = 'none';
+    });
 });
 
 // Funcionalidades para o botao 'sair'
@@ -329,5 +368,4 @@ buttonSair.addEventListener("click", (event) => {
 
 // Botao Cadastrar (arrumar tudo, todas as funcionalidades)
 // Botao de sacar (esta retornando 'Nan' quando saca alguma produto)
-// Fazer as funcionalidades do botao de historico de transacoes
 // Adicionando tempo para cada tela de movimentação financeira. Assim que clicar em cada botao do financeiro, adicionar um tempo de 60 segundos maximos que o usuario pode ficar na tela. Quando o tempo finalizar, volta para o container registrados
