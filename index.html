@@ -27,7 +27,7 @@
             </div>
             <div id="containerCadastro_buttons">
                 <input type="submit" id="buttonEntrar" value="Entrar">
-                <input type="submit" id="buttonCadastrar" value="Cadastrar">
+                <input type="button" id="buttonCadastrar" value="Cadastrar">
                 <button type="button" id="buttonVoltar">Voltar ao entrar</button>
             </div>
         </form>
@@ -35,7 +35,7 @@
 
     <div id="registrado" style="display: none;"> <!-- Inicialmente oculto -->
         <h1>Caixa Eletrônico</h1>
-        
+
         <div id="dadosCadastrados">
             <h2 id="nomeRegistrado">Bem-vindo, <span id="nome"></span></h2>
             <h2 id="contaRegistrado">Conta: <span id="conta"></span></h2>
@@ -64,6 +64,12 @@
             <button class="buttonsSacar sacarButton">Sacar</button>
             <button class="buttonsSacar cancelar">Cancelar</button>
         </div>
+
+        <!-- Container Historico de Transações -->
+         <div id="historicoTransacoes" style="display: none;">
+             <div id="historico"> <!-- Será adicionado o historico de transacoes --> </div>
+             <button id="voltar">Voltar</button>
+         </div>
     </div>
 
     <script src="script.js"></script>

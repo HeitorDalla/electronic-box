@@ -35,6 +35,11 @@ const sacarButton = document.querySelector("#saque .sacarButton");
 
 const cancelar = document.querySelector(".cancelar");
 
+// Container Historico de transacoes
+const historicoTransacoes = document.querySelector("#historicoTransacoes");
+const historico = historicoTransacoes.querySelector("#historico");
+const buttonVoltarHistorico = historicoTransacoes.querySelector("#voltar");
+
 // Variaveis para manipular a quantidade de tempo que o usuario fica nas telas do financeiro
 let intervaloTempo; // Armazenara o tempo
 let tempoIniciado = false; // Ve se o tempo iniciou
@@ -76,18 +81,18 @@ function limparCampos() {
 
     depositarInput.value = '';
     sacarInput.value = '';
-
+    historicoTransacoes.value = '';
 };
 
 // Funcao para evitar que dois containers sejam abertos ao mesmo tempo
 function esconderContainers () {
     deposito.style.display = 'none';
     saque.style.display = 'none';
+    historicoTransacoes.style.display = 'none';
 };
 
 // Funcao para gerar um codigo de conta novo a cada cliente
 function gerarCodigo() {
-
     const primeiroDigito = 4;
     const outrosDigitos = Math.floor(Math.random() * 1000);
     const codigo = `${primeiroDigito}${String(outrosDigitos).padStart(3, '0')}`;
@@ -96,13 +101,13 @@ function gerarCodigo() {
 };
 
 // Funcao para pegar o saldo do deposito
-function getSaldo (inputValor) {
+function getSaldo (inputValor, tipo) {
     
     let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").replace(",", ".").trim());
 
     let saldoNovo;
 
-    if (deposito.style.display === 'block') {
+    if (tipo === 'deposito') {
         saldoNovo = saldoAtual + inputValor;
     } else {
         saldoNovo = saldoAtual - inputValor;
@@ -116,23 +121,6 @@ function getSaldo (inputValor) {
     saldo.textContent = `R$: ${saldoNovo.toFixed(2).replace(".", ",")}`;
 
     return saldoNovo;
-};
-
-// Funcao para o botao cancelar de dentro dos containers de manipulação do financeiro
-function botaoCancelar () {
-    if (deposito.style.display === 'block') {
-        deposito.querySelector(".cancelar").addEventListener("click", (event) => {
-            event.preventDefault();
-            deposito.style.display = 'none';
-            limparCampos();
-        });
-    } else {
-        saque.querySelector(".cancelar").addEventListener("click", (event) => {
-            event.preventDefault();
-            saque.style.display = 'none';
-            limparCampos();
-        });
-    }
 };
 
 // Funcao para validar os campos
@@ -233,6 +221,12 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 
 });
 
+// Funcionalidades do botao de cadastrar
+buttonCadastrar.addEventListener("click", (event) => {
+    limparCampos();
+    inputEmailUsuario.style.display = 'block';
+}); 
+
 // Funcionalidades do botao 'voltar ao entrar'
 buttonVoltar.addEventListener("click", (event) => {
     event.preventDefault();
@@ -240,9 +234,6 @@ buttonVoltar.addEventListener("click", (event) => {
     limparCampos();
 
     inputEmailUsuario.style.display = 'none';
-
-    buttonEntrar.style.display = 'inline';
-
 });
 
 // Funcionalidades para o botao de depositar
@@ -263,7 +254,7 @@ buttonDepositar.addEventListener("click", (event) => {
             return;
         }
 
-        getSaldo(depositoInput);
+        getSaldo(depositoInput, 'deposito');
 
         limparCampos();
 
@@ -272,7 +263,12 @@ buttonDepositar.addEventListener("click", (event) => {
         deposito.style.display = 'none';
     });
     
-    botaoCancelar();
+    deposito.querySelector(".cancelar").addEventListener("click", (event) => {
+        event.preventDefault();
+
+        deposito.style.display = 'none';
+        limparCampos();
+    })
 
 });
 
@@ -294,7 +290,7 @@ buttonSacar.addEventListener("click", (event) => {
             return;
         } 
 
-        getSaldo(sacarValor);
+        getSaldo(sacarValor, 'saque');
 
         limparCampos();
 
@@ -303,7 +299,11 @@ buttonSacar.addEventListener("click", (event) => {
         saque.style.display = 'none';
     });
 
-    botaoCancelar();
+    saque.querySelector(".cancelar").addEventListener("click", (event) => {
+        event.preventDefault();
+        saque.style.display = 'none';
+        limparCampos();
+    });
 
 });
 
