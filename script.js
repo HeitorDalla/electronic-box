@@ -41,10 +41,7 @@ const historico = historicoTransacoes.querySelector("#historico");
 const buttonVoltarHistorico = historicoTransacoes.querySelector("#voltar");
 
 let transacoes = []; // Armazenar todas as transacoes
-
-// Variaveis para manipular a quantidade de tempo que o usuario fica nas telas do financeiro
-let intervaloTempo; // Armazenara o tempo
-let tempoIniciado = false; // Ve se o tempo iniciou
+let modoCadastro = false; // Vai controlar se o formulário está em modo de login ou cadastro
 
 // Funcao genérica para a verificacao de valor vazia
 function isEmpty(value) {
@@ -105,7 +102,7 @@ function gerarCodigo() {
 // Funcao para pegar o saldo do deposito
 function getSaldo (inputValor, tipo) {
     
-    let saldoAtual = parseFloat(saldo.textContent.replace("R$ ", "").replace(",", ".").trim());
+    let saldoAtual = parseFloat(saldo.textContent.replace("R$", "").replace(":", "").replace(",", ".").trim());
 
     let saldoNovo;
 
@@ -232,6 +229,12 @@ document.querySelector("#form").addEventListener("submit", (event) => {
         // Colocar informacoes do usuario
         nome.textContent = nomeValue;
         conta.textContent = gerarCodigo();
+
+        if (modoCadastro) {
+            alert("Usuário cadastrado com sucesso!!");
+        } else {
+            alert("Login efetuado com sucesso!!");
+        }
     }
 
 });
@@ -241,15 +244,15 @@ buttonCadastrar.addEventListener("click", (event) => {
     event.preventDefault();
     limparCampos();
     inputEmailUsuario.style.display = 'block';
-}); 
+    modoCadastro = true;
+});
 
 // Funcionalidades do botao 'voltar ao entrar'
 buttonVoltar.addEventListener("click", (event) => {
     event.preventDefault();
-
     limparCampos();
-
     inputEmailUsuario.style.display = 'none';
+    modoCadastro = false;
 });
 
 // Funcionalidades para o botao de depositar
@@ -363,9 +366,3 @@ buttonSair.addEventListener("click", (event) => {
     
     limparCampos();
 });
-
-// Erros para arrumar
-
-// Botao Cadastrar (arrumar tudo, todas as funcionalidades)
-// Botao de sacar (esta retornando 'Nan' quando saca alguma produto)
-// Adicionando tempo para cada tela de movimentação financeira. Assim que clicar em cada botao do financeiro, adicionar um tempo de 60 segundos maximos que o usuario pode ficar na tela. Quando o tempo finalizar, volta para o container registrados
